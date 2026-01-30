@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageWrapper } from './components/PageWrapper';
 import { DetailSection } from './components/DetailSection';
-import { BudgetContent, TaxSection } from './types';
+import { BudgetContent, TaxSection, TaxItem } from './types';
 import { BUDGET_TITLE, COMPANY_NAME } from './constants';
 
 const INITIAL_CONTENT: BudgetContent = {
@@ -39,6 +39,14 @@ const App: React.FC = () => {
   const [lastSaved, setLastSaved] = useState<string>("");
   
   const isUserView = new URLSearchParams(window.location.search).get('view') === 'user';
+
+  const paginateItems = (items: TaxItem[], limit: number = 10) => {
+    const pages = [];
+    for (let i = 0; i < items.length; i += limit) {
+      pages.push(items.slice(i, i + limit));
+    }
+    return pages;
+  };
 
   useEffect(() => {
     const savedData = localStorage.getItem('acer_budget_master');
@@ -105,8 +113,23 @@ const App: React.FC = () => {
     }));
   };
 
+  // NEW: Delete Item Function
+  const deleteItem = (section: keyof Omit<BudgetContent, 'mainSummary'>, itemId: string) => {
+    if (window.confirm("Are you sure you want to delete this block?")) {
+      setContent(prev => ({
+        ...prev,
+        [section]: {
+          ...(prev[section] as TaxSection),
+          items: (prev[section] as TaxSection).items.filter(item => item.id !== itemId)
+        }
+      }));
+    }
+  };
+
   const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  let globalPageCount = 1;
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -149,8 +172,15 @@ const App: React.FC = () => {
                 <textarea className="w-full p-3 border rounded-lg text-xs bg-slate-50" value={content[section].summary} onChange={(e) => updateSectionSummary(section, e.target.value)} />
                 <div className="space-y-4">
                   {content[section].items.map((item) => (
-                    <div key={item.id} className="p-4 bg-slate-50 border rounded-xl space-y-2">
-                      <input className="w-full font-bold p-2 border rounded text-xs" value={item.title} onChange={(e) => updateSectionItem(section, item.id, 'title', e.target.value)} />
+                    <div key={item.id} className="relative p-4 bg-slate-50 border rounded-xl space-y-2 group">
+                      {/* DELETE BUTTON */}
+                      <button 
+                        onClick={() => deleteItem(section, item.id)}
+                        className="absolute top-2 right-2 text-slate-300 hover:text-red-500 text-[10px] font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 bg-white border rounded shadow-sm"
+                      >
+                        Delete Block
+                      </button>
+                      <input className="w-full font-bold p-2 border rounded text-xs pr-20" value={item.title} onChange={(e) => updateSectionItem(section, item.id, 'title', e.target.value)} />
                       <textarea className="w-full p-2 border rounded text-xs min-h-[60px]" value={item.content} onChange={(e) => updateSectionItem(section, item.id, 'content', e.target.value)} />
                     </div>
                   ))}
@@ -162,8 +192,7 @@ const App: React.FC = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center py-8">
-          <PageWrapper pageNumber={1}>
-            {/* HERO SECTION - RELIABLE NORTH BLOCK IMAGE */}
+          <PageWrapper pageNumber={globalPageCount++}>
             <div className="relative w-full h-[240px] mb-8 overflow-hidden rounded-[40px] shadow-lg">
               <img 
                 src="https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop" 
@@ -195,7 +224,6 @@ const App: React.FC = () => {
                   <h4 className="font-bold text-sm text-slate-900 font-serif mb-4 text-center w-[120px] leading-tight min-h-[40px] flex items-center justify-center">
                     {content[key].title}
                   </h4>
-
                   <div className="w-full h-24 overflow-hidden rounded-2xl mb-4 bg-slate-100">
                     <img 
                       src={key === 'economicSurvey' ? 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop' : key === 'directTax' ? 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=400&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=400&auto=format&fit=crop'} 
@@ -203,7 +231,6 @@ const App: React.FC = () => {
                       alt="Section focus" 
                     />
                   </div>
-
                   <p className="text-[9px] text-slate-500 font-medium leading-relaxed text-center">
                     {content[key].summary}
                   </p>
@@ -212,31 +239,55 @@ const App: React.FC = () => {
             </div>
           </PageWrapper>
 
-          {(['economicSurvey', 'directTax', 'indirectTax'] as const).map((section, idx) => (
-            <div id={`${section}-page`} key={section} className="w-full flex justify-center relative">
-              <PageWrapper pageNumber={idx + 2}>
-                <div className="flex justify-between items-center mb-6 no-print">
-                   <button onClick={scrollToTop} className="text-[9px] font-bold text-slate-400 hover:text-slate-900 tracking-[0.2em] uppercase transition-colors">↑ Back to Dashboard</button>
-                </div>
-                <div className="mb-10 border-b-2 border-slate-900 pb-3">
-                  <h2 className="text-3xl font-serif font-bold text-slate-900">{content[section].title}</h2>
-                </div>
-                <DetailSection items={content[section].items} />
-                {/* NEW: STANDARD BUDGET DISCLAIMER (Only on the last page) */}
-                {section === 'indirectTax' && (
-                  <div className="mt-auto pt-10 border-t border-slate-100">
-                    <p className="text-[8px] leading-relaxed text-slate-400 text-justify italic">
-                      <strong>Disclaimer:</strong> This bulletin has been prepared by {COMPANY_NAME} for general information purposes only and does not constitute professional advice. 
-                      While every effort has been made to ensure the accuracy of the information based on the Union Budget 2026-27 and Economic Survey 
-                      presentations, tax laws are subject to change and varied interpretations. Readers are advised to consult with a qualified 
-                      tax professional before taking any action based on the content of this alert. {COMPANY_NAME} accepts no liability for 
-                      any loss arising from the use of this information.
-                    </p>
+          {(['economicSurvey', 'directTax', 'indirectTax'] as const).map((sectionKey) => {
+            const paginatedItems = paginateItems(content[sectionKey].items);
+            
+            return paginatedItems.map((pageItems, pageIdx) => (
+              <div 
+                id={pageIdx === 0 ? `${sectionKey}-page` : undefined} 
+                key={`${sectionKey}-${pageIdx}`} 
+                className="w-full flex justify-center relative"
+              >
+                <PageWrapper pageNumber={globalPageCount++}>
+                  <div className="flex flex-col h-full">
+                    <div className="flex justify-between items-center mb-6 no-print">
+                      <button onClick={scrollToTop} className="text-[9px] font-bold text-slate-400 hover:text-slate-900 tracking-[0.2em] uppercase transition-colors">↑ Back to Dashboard</button>
+                    </div>
+                    
+                    {pageIdx === 0 && (
+                      <div className="mb-10 border-b-2 border-slate-900 pb-3">
+                        <h2 className="text-3xl font-serif font-bold text-slate-900">{content[sectionKey].title}</h2>
+                      </div>
+                    )}
+
+                    <DetailSection items={pageItems} />
+
+                    <div className="mt-auto pt-10 border-t border-slate-100 flex flex-col gap-4">
+                      {pageIdx < paginatedItems.length - 1 ? (
+                        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-400 italic font-bold text-center">
+                          ( {content[sectionKey].title} continued on next page... )
+                        </p>
+                      ) : (
+                        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-800 italic font-black text-center">
+                          ( End of {content[sectionKey].title} Observations )
+                        </p>
+                      )}
+
+                      {sectionKey === 'indirectTax' && pageIdx === paginatedItems.length - 1 && (
+                        <p className="text-[8px] leading-relaxed text-slate-400 text-justify italic mt-4">
+                          <strong>Disclaimer:</strong> This bulletin has been prepared by {COMPANY_NAME} for general information purposes only and does not constitute professional advice. 
+                          While every effort has been made to ensure the accuracy of the information based on the Union Budget 2026-27 and Economic Survey 
+                          presentations, tax laws are subject to change and varied interpretations. Readers are advised to consult with a qualified 
+                          tax professional before taking any action based on the content of this alert. {COMPANY_NAME} accepts no liability for 
+                          any loss arising from the use of this information.
+                        </p>
+                      )}
+                    </div>
                   </div>
-                )}
-              </PageWrapper>
-            </div>
-          ))}
+                </PageWrapper>
+              </div>
+            ));
+          })}
         </div>
       )}
     </div>
