@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Acer Budget Alert Pro</title>
+    <title>Acer Tax India Budget 2025-26 Alert</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -15,17 +14,61 @@
       .font-serif {
         font-family: 'Playfair Display', serif;
       }
+
       @media print {
-        .no-print {
+        /* 1. Reset everything to basic blocks for the printer */
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        /* 2. Remove standard browser headers/footers */
+        @page {
+          size: A4;
+          margin: 0;
+        }
+
+        body {
+          background-color: white !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        .no-print, nav, button {
           display: none !important;
         }
-        .page-break {
-          page-break-after: always;
+
+        /* 3. The 'Container Fix' - lock the A4 page size */
+        .a4-page {
+          width: 210mm !important;
+          height: 296.8mm !important; /* Fixed A4 height to prevent "all over the page" */
+          margin: 0 auto !important;
+          padding: 20mm !important;
+          page-break-after: always !important;
+          break-after: always !important;
+          box-shadow: none !important;
+          display: block !important;
+          overflow: hidden !important; /* Crucial: stops content from bleeding into next page */
+          position: relative !important;
         }
-        body {
-          background-color: white;
+
+        /* 4. Force sections to stay whole */
+        section, .group, .mb-14, .DetailSection > div {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+          display: block !important;
+          width: 100% !important;
+        }
+
+        /* 5. Handle the columns correctly in print */
+        .grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, 1fr) !important;
+          gap: 2.5rem !important;
         }
       }
+
+      /* Screen View styling */
       .a4-page {
         width: 210mm;
         min-height: 297mm;
@@ -49,9 +92,9 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/indiabudgetnew/assets/index-mGKp982V.js"></script>
+  <script type="module" crossorigin src="/indiabudgetnew/assets/index-BEHOW-wz.js"></script>
 </head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
 </body>
 </html>
