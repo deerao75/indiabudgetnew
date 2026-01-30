@@ -65,10 +65,27 @@ const App: React.FC = () => {
 
   const copyClientLink = () => {
     const userLink = `${window.location.origin}${window.location.pathname}?view=user`;
-    navigator.clipboard.writeText(userLink).then(() => {
-      window.prompt("Client Link Generated! Copy this link to share:", userLink);
+    const linkText = "Acer Tax India Budget Alert 2025-26";
+    
+    // Create a Rich Text (HTML) version of the link
+    const htmlLink = `<a href="${userLink}">${linkText}</a>`;
+    
+    // Use a ClipboardItem to copy both plain text and HTML
+    const typeHtml = "text/html";
+    const typeText = "text/plain";
+    const blobHtml = new Blob([htmlLink], { type: typeHtml });
+    const blobText = new Blob([userLink], { type: typeText });
+    
+    const data = [new ClipboardItem({
+      [typeHtml]: blobHtml,
+      [typeText]: blobText,
+    })];
+
+    navigator.clipboard.write(data).then(() => {
+      alert("Hyperlink copied! You can now paste it into WhatsApp or Email as a clickable title.");
     }).catch(() => {
-      window.prompt("Copy this link to share with clients:", userLink);
+      // Fallback if the browser doesn't support ClipboardItem
+      window.prompt("Copy this link:", userLink);
     });
   };
 
