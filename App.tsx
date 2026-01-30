@@ -74,11 +74,23 @@ const App: React.FC = () => {
   };
 
   const copyClientLink = () => {
+    // Construct the URL specifically for the client
     const userLink = `${window.location.origin}${window.location.pathname}?view=user`;
+    
+    // The text the client will see in their email/WhatsApp
     const linkText = "Economic Survey and India Budget Alert 2026-27";
-    const htmlLink = `<a href="${userLink}">${linkText}</a>`;
-    const data = [new ClipboardItem({ "text/html": new Blob([htmlLink], { type: "text/html" }), "text/plain": new Blob([userLink], { type: "text/plain" }) })];
-    navigator.clipboard.write(data).then(() => alert("Hyperlink copied!"));
+    
+    // Create an HTML version so it's a clickable blue link in Outlook/Gmail
+    const htmlLink = `<a href="${userLink}" style="color: #2563eb; text-decoration: underline;">${linkText}</a>`;
+    
+    const data = [
+      new ClipboardItem({
+        "text/html": new Blob([htmlLink], { type: "text/html" }),
+        "text/plain": new Blob([userLink], { type: "text/plain" })
+      })
+    ];
+
+    navigator.clipboard.write(data).then(() => alert("Client Hyperlink Copied! You can now paste this into an email or WhatsApp."));
   };
 
   const updateMainSummary = (val: string) => setContent(prev => ({ ...prev, mainSummary: val }));
