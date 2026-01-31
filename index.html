@@ -18,13 +18,6 @@
         font-family: 'Playfair Display', serif;
       }
 
-      /* Global Justification for all paragraphs */
-      p, .text-justify, main div {
-        text-align: justify !important;
-        text-justify: inter-word;
-        hyphens: auto;
-      }
-
       /* Responsive Screen View styling */
       .a4-page {
         width: 100%; /* Default to full width for mobile */
@@ -51,25 +44,16 @@
 
       /* Mobile-specific Fixes */
       @media (max-width: 767px) {
-        /* Center and stack the header elements */
+        /* Fix the header alignment from your screenshots */
         .a4-page header {
           flex-direction: column !important;
           align-items: center !important;
           text-align: center !important;
-          gap: 12px;
-          padding-bottom: 20px;
+          gap: 10px;
         }
         
         .a4-page header div {
           text-align: center !important;
-          width: 100% !important;
-        }
-
-        /* Ensure Logo fits within mobile width */
-        header svg, header img {
-          max-width: 240px !important;
-          height: auto !important;
-          margin: 0 auto;
         }
 
         /* Prevent columns from colliding */
@@ -86,9 +70,9 @@
           text-align: center !important;
         }
 
-        /* Maintain justification even on mobile */
-        .text-justify, p {
-          text-align: justify !important;
+        /* Ensure the Executive Summary fits */
+        .text-justify {
+          text-align: left !important; /* Justified text looks broken on narrow mobile screens */
         }
       }
 
@@ -122,12 +106,6 @@
           display: block !important;
           overflow: hidden !important; 
           position: relative !important;
-        }
-        section, .group, .mb-14, .DetailSection > div {
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
-          display: block !important;
-          width: 100% !important;
         }
       }
     </style>
