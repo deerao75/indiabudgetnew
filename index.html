@@ -18,7 +18,7 @@
         font-family: 'Playfair Display', serif;
       }
 
-      /* Global Justification for all paragraphs and content */
+      /* Global Justification for all paragraphs */
       p, .text-justify, main div {
         text-align: justify !important;
         text-justify: inter-word;
@@ -27,10 +27,10 @@
 
       /* Responsive Screen View styling */
       .a4-page {
-        width: 100%; 
+        width: 100%; /* Default to full width for mobile */
         max-width: 210mm;
-        min-height: auto; 
-        padding: 20px; 
+        min-height: auto; /* Allow content to grow on mobile to prevent overlap */
+        padding: 20px; /* Standard mobile padding */
         margin: 0 auto;
         background: white;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -43,7 +43,7 @@
       @media (min-width: 768px) {
         .a4-page {
           width: 95%;
-          min-height: 297mm; 
+          min-height: 297mm; /* Restore A4 height on desktop */
           padding: 20mm;
           margin: 20px auto;
         }
@@ -51,24 +51,25 @@
 
       /* Mobile-specific Fixes */
       @media (max-width: 767px) {
-        /* Centered stacked header for mobile */
+        /* Center and stack the header elements */
         .a4-page header {
           flex-direction: column !important;
           align-items: center !important;
           text-align: center !important;
-          gap: 8px;
+          gap: 12px;
+          padding-bottom: 20px;
         }
         
         .a4-page header div {
           text-align: center !important;
-          width: 100%;
+          width: 100% !important;
         }
 
-        /* Ensure logo is centered and fits */
+        /* Ensure Logo fits within mobile width */
         header svg, header img {
-          max-width: 220px !important;
+          max-width: 240px !important;
           height: auto !important;
-          margin-bottom: 4px;
+          margin: 0 auto;
         }
 
         /* Prevent columns from colliding */
@@ -83,6 +84,11 @@
           font-size: 1.4rem !important;
           line-height: 1.2 !important;
           text-align: center !important;
+        }
+
+        /* Maintain justification even on mobile */
+        .text-justify, p {
+          text-align: justify !important;
         }
       }
 
@@ -117,22 +123,28 @@
           overflow: hidden !important; 
           position: relative !important;
         }
+        section, .group, .mb-14, .DetailSection > div {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+          display: block !important;
+          width: 100% !important;
+        }
       }
     </style>
 
-    <script type="importmap">
-    {
-      "imports": {
-        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-        "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
-        "react/": "https://esm.sh/react@^19.2.4/",
-        "react": "https://esm.sh/react@^19.2.4"
-      }
-    }
-    </script>
-    <script type="module" crossorigin src="/indiabudgetnew/assets/index-BHXX0iaQ.js"></script>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/indiabudgetnew/assets/index-Cf6zuAYy.js"></script>
+</head>
   <body>
     <div id="root"></div>
-  </body>
+</body>
 </html>
