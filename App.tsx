@@ -253,8 +253,13 @@ const App: React.FC = () => {
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
                  <div className="px-4 py-4 md:px-8 md:py-6 border border-white/20 backdrop-blur-lg rounded-[24px] md:rounded-[32px]">
-                    <h2 className="text-white text-xl md:text-3xl font-serif leading-tight">Economic Survey and<br className="hidden md:block"/>India Budget 2026-27</h2>
-                    <p className="text-white/60 text-[7px] md:text-[9px] uppercase tracking-[0.4em] mt-3 font-bold">Strategic Insight Bulletin</p>
+                  <h2 className="text-white text-xl md:text-3xl font-serif leading-tight text-center">
+                    {/* Added a space after 'and' and a responsive break */}
+                    Economic Survey and <br className="md:hidden" /> India Budget 2026-27
+                  </h2>
+                  <p className="text-white/60 text-[8px] md:text-[9px] uppercase tracking-[0.4em] mt-3 font-bold text-center">
+                    Strategic Insight Bulletin
+                  </p>
                  </div>
               </div>
             </div>
