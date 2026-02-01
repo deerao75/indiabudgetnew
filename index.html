@@ -18,14 +18,18 @@
         font-family: 'Playfair Display', serif;
       }
 
-      /* GLOBAL JUSTIFICATION: Active on both Web and Mobile */
+      /* GLOBAL JUSTIFICATION: Updated to fix hyphenation and word breaks */
       p, .text-justify, 
       .BudgetContent p, 
       main p,
       .DetailSection div {
         text-align: justify !important;
         text-justify: inter-word; /* Distributes space evenly between words */
-        hyphens: auto; /* Prevents large white gaps on narrow mobile screens */
+        /* Changed from auto to none to prevent words from breaking with hyphens */
+        hyphens: none !important; 
+        /* Added to ensure words are kept whole and not split across lines */
+        word-break: keep-all;
+        overflow-wrap: break-word;
       }
 
       /* Responsive Screen View styling */
