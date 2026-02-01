@@ -15,6 +15,8 @@ export interface TaxSection {
 export interface BudgetContent {
   mainSummary: string;
   economicSurvey: TaxSection;
+  /* Added the new Key Highlights section here */
+  keyHighlights: TaxSection; 
   directTax: TaxSection;
   indirectTax: TaxSection;
 }
